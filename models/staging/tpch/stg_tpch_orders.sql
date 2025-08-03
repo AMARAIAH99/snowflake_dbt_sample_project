@@ -1,6 +1,6 @@
 with source as (
 
-    select * from snowflake_sample_data.tpch_sf1.orders
+    select * from {{ source('tpch', 'orders') }}
 
 ),
 
