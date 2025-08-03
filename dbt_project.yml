@@ -20,6 +20,7 @@ models:
   snowflake_workshop:
     staging:
       materialized: view
+      snowflake_warehouse: pc_dbt_wh_large
       
     marts:
       materialized: table
