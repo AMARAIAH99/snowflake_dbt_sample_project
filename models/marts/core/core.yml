@@ -21,7 +21,7 @@ models:
         description: status of the order
         tests:
           - accepted_values:
-              values: ['P','O','F']
+              values: ['P','O','F'] 
       - name: priority_code
         description: code associated with the order
       - name: clerk_name
