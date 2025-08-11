@@ -7,7 +7,7 @@ order_item as (
     
     select * from {{ ref('int_order_items') }}
 
-),
+),  
 order_item_summary as (
 
     select 
