@@ -10,7 +10,8 @@ order_item as (
 ),  
 order_item_summary as (
 
-    select 
+    select  
+    
         order_key,
         sum(gross_item_sales_amount) as gross_item_sales_amount,
         sum(item_discount_amount) as item_discount_amount,
