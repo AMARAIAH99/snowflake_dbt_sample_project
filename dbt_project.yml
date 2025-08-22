@@ -1,9 +1,10 @@
-name: 'snowflake_workshop'
+name: 'SNOWFLAKE_DBT_SAMPLE_PROJECT'
 version: '1.0.0'
 config-version: 2
 
 profile: 'default'
 
+# Project structure
 model-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
@@ -11,17 +12,23 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
+# Where dbt stores compiled SQL and artifacts
 target-path: "target"  
 clean-targets:         
-    - "target"
-    - "dbt_modules"
+  - "target"
+  - "dbt_modules"
 
+# Model configurations
 models:
-  snowflake_workshop:
+  SNOWFLAKE_DBT_SAMPLE_PROJECT:
     staging:
-      materialized: view
-      snowflake_warehouse: pc_dbt_wh_large
+      +materialized: view
+      +database: "{{ env_var('DBT_DATABASE') }}"
+      +schema: "{{ env_var('DBT_STAGE_SCHEMA', 'STAGE') }}"
       
+
     marts:
-      materialized: table
-      snowflake_warehouse: pc_dbt_wh_large
+      +materialized: table
+      +database: "{{ env_var('DBT_DATABASE') }}"
+      +schema: "{{ env_var('DBT_MART_SCHEMA', 'MART') }}"
+      
