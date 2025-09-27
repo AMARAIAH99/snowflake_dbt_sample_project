@@ -1,14 +1,10 @@
-{{ config(
-    materialized = 'table',
-    persist_docs = {'relation': true, 'columns': true}
-) }}
 
 
 with source as (
 
     select * from {{ source('tpch', 'orders') }}
 
-),0
+),
 
 renamed as (
 
