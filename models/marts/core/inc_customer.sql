@@ -14,8 +14,6 @@ WITH source_data AS (
     etl_load_timestamp
     FROM {{ref('stg_customer')}}
 
-
-
     {% if is_incremental() %}
         WHERE etl_load_timestamp > (SELECT MAX(etl_load_timestamp) FROM {{ this }})
     {% endif %}

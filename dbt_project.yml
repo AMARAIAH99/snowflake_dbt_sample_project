@@ -20,15 +20,17 @@ clean-targets:
 
 # Model configurations
 models:
+  +persist_docs:
+    relation: true
+    columns: true
+
   SNOWFLAKE_DBT_SAMPLE_PROJECT:
     staging:
-      +materialized: view
+      +materialized: table
       +database: "{{ env_var('DBT_DATABASE') }}"
       +schema: "{{ env_var('DBT_STAGE_SCHEMA', 'STAGE') }}"
       
-
     marts:
       +materialized: table
       +database: "{{ env_var('DBT_DATABASE') }}"
       +schema: "{{ env_var('DBT_MART_SCHEMA', 'MART') }}"
-      
