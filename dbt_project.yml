@@ -13,8 +13,8 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 # Where dbt stores compiled SQL and artifacts
-target-path: "target"  
-clean-targets:         
+target-path: "target"
+clean-targets:
   - "target"
   - "dbt_modules"
 
@@ -29,7 +29,7 @@ models:
       +materialized: table
       +database: "{{ env_var('DBT_DATABASE') }}"
       +schema: "{{ env_var('DBT_STAGE_SCHEMA', 'STAGE') }}"
-      
+
     marts:
       +materialized: table
       +database: "{{ env_var('DBT_DATABASE') }}"
