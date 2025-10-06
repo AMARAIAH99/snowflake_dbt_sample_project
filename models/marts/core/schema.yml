@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: orders_incremental
+  - name: orders_incremental 
     description: "this is for the incremental model testing"
     columns:
       - name: order_id
