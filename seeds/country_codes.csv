@@ -1,0 +1,21 @@
+country_name,country_code,iso_alpha_3,continent
+India,IN,IND,Asia
+United States,US,USA,North America
+United Kingdom,GB,GBR,Europe
+Canada,CA,CAN,North America
+Australia,AU,AUS,Oceania
+Germany,DE,DEU,Europe
+France,FR,FRA,Europe
+Japan,JP,JPN,Asia
+China,CN,CHN,Asia
+Brazil,BR,BRA,South America
+Mexico,MX,MEX,North America
+South Africa,ZA,ZAF,Africa
+Italy,IT,ITA,Europe
+Spain,ES,ESP,Europe
+Russia,RU,RUS,Europe
+Singapore,SG,SGP,Asia
+United Arab Emirates,AE,ARE,Asia
+Saudi Arabia,SA,SAU,Asia
+Indonesia,ID,IDN,Asia
+Argentina,AR,ARG,South America

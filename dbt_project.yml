@@ -11,9 +11,6 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
-# Where dbt stores compiled SQL and artifacts
-target-path: "target"
 clean-targets:
   - "target"
   - "dbt_modules"
@@ -25,12 +22,21 @@ models:
     columns: true
 
   SNOWFLAKE_DBT_SAMPLE_PROJECT:
+
     staging:
       +materialized: table
-      +database: "{{ env_var('DBT_DATABASE') }}"
-      +schema: "{{ env_var('DBT_STAGE_SCHEMA', 'STAGE') }}"
+      +database: "MY_DBT"
+      +schema: "MY_SCHEMA"
 
     marts:
       +materialized: table
-      +database: "{{ env_var('DBT_DATABASE') }}"
-      +schema: "{{ env_var('DBT_MART_SCHEMA', 'MART') }}"
+      +database: "MY_DBT"
+      +schema: "MY_SCHEMA"
+
+    raw:
+      +materialized: table
+      +database: "MY_DBT"
+      +schema: "public"
+
+flags:
+  require_generic_test_arguments_property: true

@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: stg_policy_finance
+    description: "Staging finance dataset for insurance premiums and claims."
+
+    columns:
+      - name: POLICY_ID
+        description: "Unique insurance policy identifier."
+        tests:
+          - not_null
+          - unique
+
+      - name: PREMIUM_AMOUNT
+        description: "Premium collected for the policy."
+        tests:
+          - not_null
+          - dbt_utils.numeric_value:
+              arguments:
+                min_value: 0
+      - name: CLAIM_AMOUNT
+        description: "Claim amount paid for the policy."
+        tests:
+          - dbt_utils.numeric_value:
+              arguments:
+                min_value: 0
+      - name: PAYMENT_STATUS
+        description: "Financial status of the transaction."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['PAID', 'PENDING', 'REJECTED']
+
+    tests:
+
+      # ---------------------------
+      # ELEMENTARY ANOMALY TESTS
+      # ---------------------------
+
+      # Unexpected spike or drop in financial transactions
+      - elementary.volume_anomalies:
+          arguments:
+            sensitivity: medium
+      - elementary.freshness_anomalies:
+          arguments:
+            timestamp_column: UPDATED_AT
+      - elementary.column_anomalies:
+          column_name: CLAIM_AMOUNT
+
+      # Detect new policy fields added by business
+      - elementary.schema_changes

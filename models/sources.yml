@@ -1,0 +1,84 @@
+version: 2
+
+sources:
+  - name: ecommerce_raw
+    schema: my_schema                 # change if you used a different schema
+    database: my_dbt   # ✅ replace with your DB name
+    description: "Raw source tables for ecommerce customer & order pipeline."
+
+    tables:
+
+      - name: customers
+        description: "Customer master data with personal details."
+        columns:
+          - name: customer_id
+            description: "Unique ID for each customer."
+            tests:
+              - not_null
+              - unique
+          - name: customer_name
+            description: "Name of the customer."
+          - name: email
+            description: "Email address of the customer."
+          - name: address
+            description: "Customer's location."
+          - name: created_at
+            description: "Customer creation date."
+
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
+
+
+      - name: orders
+        description: "Orders placed by customers with status & total value."
+        columns:
+          - name: order_id
+            description: "Unique order ID."
+            tests:
+              - not_null
+              - unique
+
+          - name: customer_id
+            description: "Foreign key linking to customers table."
+            tests:
+              - relationships:
+                  arguments:
+                    to: source('ecommerce_raw', 'customers')
+                    field: customer_id
+          - name: order_date
+            description: "Date of order creation."
+          - name: order_status
+            description: "Current status of the order."
+          - name: total_amount
+            description: "Total bill for the order."
+
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 5, period: day}
+
+
+      - name: order_items
+        description: "Line-level details of each order."
+        columns:
+          - name: item_id
+            description: "Unique line item ID."
+            tests:
+              - not_null
+              - unique
+
+          - name: order_id
+            description: "Foreign key linking to orders."
+            tests:
+              - relationships:
+                  arguments:
+                    to: source('ecommerce_raw', 'orders')
+                    field: order_id
+          - name: product_name
+            description: "Name of the purchased product."
+          - name: quantity
+            description: "Quantity of items bought."
+          - name: price
+            description: "Price per item."
