@@ -1,0 +1,103 @@
+version: 2
+
+models:
+  - name: demo_events
+    description: "Synthetic events for testing Elementary package"
+
+    config:
+      elementary:
+        timestamp_column: "loaded_at"
+
+    # -------------------------------------------------------------------
+    # MODEL-LEVEL TESTS
+    # -------------------------------------------------------------------
+    tests:
+
+      # 1️⃣ VOLUME ANOMALIES – detects row count anomalies
+      - elementary.volume_anomalies:
+          arguments:
+            anomaly_sensitivity: 2
+            time_bucket:
+              period: day
+              count: 1
+
+      # 2️⃣ FRESHNESS ANOMALIES – checks data arrival frequency
+      - elementary.freshness_anomalies:
+          arguments:
+            anomaly_sensitivity: 2
+            time_bucket:
+              period: hour
+              count: 1
+
+      # 3️⃣ EVENT FRESHNESS – checks delay between event generation & load
+      - elementary.event_freshness_anomalies:
+          arguments:
+            event_timestamp_column: "loaded_at"
+            anomaly_sensitivity: 2
+            time_bucket:
+              period: hour
+              count: 1
+
+      # 4️⃣ DIMENSION ANOMALIES – checks category distribution trends
+      - elementary.dimension_anomalies:
+          arguments:
+            dimensions:
+              - event_type
+              - country
+            anomaly_sensitivity: 2
+            time_bucket:
+              period: day
+              count: 1
+
+      # 5️⃣ ALL COLUMNS ANOMALIES – auto-detect anomalies in all numeric columns
+      - elementary.all_columns_anomalies:
+          arguments:
+            anomaly_sensitivity: 2
+            time_bucket:
+              period: day
+              count: 1
+
+      # 6️⃣ SCHEMA CHANGE TEST – detects added/removed/changed columns
+      - elementary.schema_changes
+
+      # 7️⃣ AI DATA VALIDATION – natural language quality rule
+      - elementary.ai_data_validation:
+          expectation_prompt: |
+            The event_value should always be positive
+            and loaded_at should not be in the future.
+
+
+    # -------------------------------------------------------------------
+    # COLUMN LEVEL TESTS
+    # -------------------------------------------------------------------
+    columns:
+      # 8️⃣ COLUMN ANOMALIES – apply to event_value
+      - name: event_value
+        description: "Value of the event"
+        tests:
+          - elementary.column_anomalies:
+              arguments:
+                column_anomalies:
+                  - average
+                  - min
+                  - max
+                anomaly_sensitivity: 2
+                time_bucket:
+                  period: day
+                  count: 1
+
+      # 9️⃣ JSON SCHEMA VALIDATION (example – optional column)
+      - name: event_metadata
+        description: "Incoming JSON blob (optional)"
+        tests:
+          - elementary.json_schema:
+              schema: |
+                {
+                  "type": "object",
+                  "properties": {
+                    "source": {"type": "string"},
+                    "platform": {"type": "string"},
+                    "is_mobile": {"type": "boolean"}
+                  }
+                }
+              required: false  # test only if column exists
